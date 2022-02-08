@@ -1,6 +1,10 @@
 const express = require("express");
 const app = express();
 const mysql = require("mysql");
+const cors = require("cors");
+
+app.use(cors());
+app.use(express.json());
 
 const db = mysql.createConnection({
 	host: "localhost",
@@ -16,19 +20,20 @@ db.query("SELECT * FROM employees", (error, results, fields) => {
 db.end(); */
 
 app.post("/create", (req, res) => {
-	const name = req.params.name;
-	const age = req.params.age;
-	const country = req.params.country;
-	const position = req.params.position;
-	const wage = req.params.wage;
-
+	const name = req.body.name;
+	const age = req.body.age;
+	const country = req.body.country;
+	const position = req.body.position;
+	const wage = req.body.wage;
+	console.log(req.body);
 	db.query(
 		"INSERT INTO employees (name, age, country, position, wage) VALUES (?,?,?,?,?)",
 		[name, age, country, position, wage],
 		(error, result) => {
 			if (error) throw new Error(error);
 			console.log(result);
-			res.send("Values Inserted");
+			//res.send("Values Inserted");
+			res.status(201).json(result);
 		}
 	);
 });
