@@ -31,6 +31,15 @@ function App() {
 			});
 	};
 
+	const deleteEmployee = (employeeId) => {
+		axios
+			.delete(`http://localhost:3001/employee/${employeeId}`)
+			.then((response) => {
+				alert(response.data);
+				getEmployees();
+			});
+	};
+
 	return (
 		<div className="App">
 			<div className="workerInfo">
@@ -66,14 +75,48 @@ function App() {
 							return (
 								<tr key={employee.id}>
 									<td>{employee.id}</td>
-									<td>{employee.name}</td>
-									<td>{employee.age}</td>
-									<td>{employee.country}</td>
-									<td>{employee.position}</td>
-									<td>{employee.wage}</td>
+									<td>
+										{employee.name}
+										<br />
+										<br />
+										<br />
+										<input placeholder={employee.name} type="text" />
+									</td>
+									<td>
+										{employee.age}
+										<br />
+										<br />
+										<br />
+										<input placeholder={employee.age} type="number" />
+									</td>
+									<td>
+										{employee.country}
+										<br />
+										<br />
+										<br />
+										<input placeholder={employee.country} type="text" />
+									</td>
+									<td>
+										{employee.position}
+										<br />
+										<br />
+										<br />
+										<input placeholder={employee.position} type="text" />
+									</td>
+									<td>
+										{employee.wage} <br />
+										<br />
+										<br />
+										<input placeholder={employee.wage} type="number" />
+									</td>
 									<td style={{ border: "none" }}>
-										<button style={{ width: "50%" }}>Edit</button>
-										<button style={{ width: "50%" }}>Delete</button>
+										<button>Edit</button>
+										<button
+											onClick={() => deleteEmployee(employee.id)}
+											style={{ backgroundColor: "#e43" }}
+										>
+											Delete
+										</button>
 									</td>
 								</tr>
 							);

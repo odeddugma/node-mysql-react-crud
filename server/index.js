@@ -12,12 +12,6 @@ const db = mysql.createConnection({
 	password: "",
 	database: "employee_system",
 });
-/* db.connect(() => console.log("db connected!"));
-db.query("SELECT * FROM employees", (error, results, fields) => {
-	if (error) throw error;
-	console.log(results);
-});
-db.end(); */
 
 app.get("/employees", (req, res) => {
 	db.query("SELECT * FROM employees", (error, results) => {
@@ -45,6 +39,27 @@ app.post("/create", (req, res) => {
 			res.status(201).json(results);
 		}
 	);
+});
+
+app.put("/employee", (req, res) => {
+	const id = req.body.id;
+	const name = req.body.name;
+	db.query(
+		"UPDATE `employees` SET `name` = ? WHERE `employees`.`id` = ?",
+		[wage, id],
+		(error, results) => {
+			if (error) throw new Error(error);
+			res.status(200).json(results);
+		}
+	);
+});
+
+app.delete(`/employee/:id`, (req, res) => {
+	const id = req.params.id;
+	db.query("DELETE FROM employees WHERE id = ?", [id], (error, results) => {
+		if (error) throw new Error(error);
+		res.status(200).send("The user deleted successfully");
+	});
 });
 
 app.listen(3001, () => console.log("listening on port 3001"));
