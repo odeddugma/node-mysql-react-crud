@@ -19,21 +19,30 @@ db.query("SELECT * FROM employees", (error, results, fields) => {
 });
 db.end(); */
 
+app.get("/employees", (req, res) => {
+	db.query("SELECT * FROM employees", (error, results) => {
+		if (error) throw new Error(error);
+		res.status(200).json(results);
+	});
+});
+
 app.post("/create", (req, res) => {
 	const name = req.body.name;
 	const age = req.body.age;
 	const country = req.body.country;
 	const position = req.body.position;
 	const wage = req.body.wage;
-	console.log(req.body);
+
+	if (!name || !age || !country || !position || !wage) {
+		res.status(400);
+		throw new Error("Invalid request");
+	}
 	db.query(
 		"INSERT INTO employees (name, age, country, position, wage) VALUES (?,?,?,?,?)",
 		[name, age, country, position, wage],
-		(error, result) => {
+		(error, results) => {
 			if (error) throw new Error(error);
-			console.log(result);
-			//res.send("Values Inserted");
-			res.status(201).json(result);
+			res.status(201).json(results);
 		}
 	);
 });
