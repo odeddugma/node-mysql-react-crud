@@ -1,6 +1,6 @@
 import "./App.css";
 import { useState } from "react";
-import axios, { Axios } from "axios";
+import axios from "axios";
 
 function App() {
 	const [name, setName] = useState("");
@@ -10,6 +10,12 @@ function App() {
 	const [wage, setWage] = useState(0);
 
 	const [employeesList, setEmployeesList] = useState([]);
+
+	const [newName, setNewName] = useState(name);
+	const [newAge, setNewAge] = useState(age);
+	const [newCountry, setNewCountry] = useState(country);
+	const [newPosition, setNewPosition] = useState(position);
+	const [newWage, setNewWage] = useState(age);
 
 	const getEmployees = () => {
 		axios.get("http://localhost:3001/employees").then((response) => {
@@ -25,6 +31,30 @@ function App() {
 				country: country,
 				position: position,
 				wage: wage,
+			})
+			.then(() => {
+				getEmployees();
+			});
+	};
+
+	const updateEmployee = (employeeId) => {
+		const filteredEmployee = employeesList.filter(
+			(employee) => employee.id === employeeId
+		);
+		const employee = filteredEmployee[0];
+		employee.name = newName ? newName : employee.name;
+		employee.age = newAge ? newAge : employee.age;
+		employee.country = newCountry ? newCountry : employee.country;
+		employee.position = newPosition ? newPosition : employee.position;
+		employee.wage = newWage ? newWage : employee.wage;
+
+		axios
+			.put(`http://localhost:3001/employee/${employeeId}`, {
+				name: employee.name,
+				age: employee.age,
+				country: employee.country,
+				position: employee.position,
+				wage: employee.wage,
 			})
 			.then(() => {
 				getEmployees();
@@ -80,37 +110,59 @@ function App() {
 										<br />
 										<br />
 										<br />
-										<input placeholder={employee.name} type="text" />
+										<input
+											placeholder={employee.name}
+											type="text"
+											onChange={(e) => setNewName(e.target.value)}
+										/>
 									</td>
 									<td>
 										{employee.age}
 										<br />
 										<br />
 										<br />
-										<input placeholder={employee.age} type="number" />
+										<input
+											placeholder={employee.age}
+											type="number"
+											onChange={(e) => setNewAge(e.target.value)}
+										/>
 									</td>
 									<td>
 										{employee.country}
 										<br />
 										<br />
 										<br />
-										<input placeholder={employee.country} type="text" />
+										<input
+											placeholder={employee.country}
+											type="text"
+											onChange={(e) => setNewCountry(e.target.value)}
+										/>
 									</td>
 									<td>
 										{employee.position}
 										<br />
 										<br />
 										<br />
-										<input placeholder={employee.position} type="text" />
+										<input
+											placeholder={employee.position}
+											type="text"
+											onChange={(e) => setNewPosition(e.target.value)}
+										/>
 									</td>
 									<td>
 										{employee.wage} <br />
 										<br />
 										<br />
-										<input placeholder={employee.wage} type="number" />
+										<input
+											placeholder={employee.wage}
+											type="number"
+											onChange={(e) => setNewWage(e.target.value)}
+										/>
 									</td>
 									<td style={{ border: "none" }}>
-										<button>Edit</button>
+										<button onClick={() => updateEmployee(employee.id)}>
+											Edit
+										</button>
 										<button
 											onClick={() => deleteEmployee(employee.id)}
 											style={{ backgroundColor: "#e43" }}

@@ -26,7 +26,6 @@ app.post("/create", (req, res) => {
 	const country = req.body.country;
 	const position = req.body.position;
 	const wage = req.body.wage;
-
 	if (!name || !age || !country || !position || !wage) {
 		res.status(400);
 		throw new Error("Invalid request");
@@ -41,12 +40,16 @@ app.post("/create", (req, res) => {
 	);
 });
 
-app.put("/employee", (req, res) => {
-	const id = req.body.id;
+app.put(`/employee/:id`, (req, res) => {
+	const id = req.params.id;
 	const name = req.body.name;
+	const age = req.body.age;
+	const country = req.body.country;
+	const position = req.body.position;
+	const wage = req.body.wage;
 	db.query(
-		"UPDATE `employees` SET `name` = ? WHERE `employees`.`id` = ?",
-		[wage, id],
+		"UPDATE employees SET name = ?, age = ?, country = ?, position = ?, wage = ? WHERE id = ?",
+		[name, age, country, position, wage, id],
 		(error, results) => {
 			if (error) throw new Error(error);
 			res.status(200).json(results);
@@ -56,7 +59,7 @@ app.put("/employee", (req, res) => {
 
 app.delete(`/employee/:id`, (req, res) => {
 	const id = req.params.id;
-	db.query("DELETE FROM employees WHERE id = ?", [id], (error, results) => {
+	db.query("DELETE FROM employees WHERE id = ?", id, (error, results) => {
 		if (error) throw new Error(error);
 		res.status(200).send("The user deleted successfully");
 	});
